@@ -11,6 +11,8 @@
             <div class="alert alert-success" *ngSwitchCase="true">
                 <span *ngIf="account"> You are logged in as user "{{account.login}}". </span>
             </div>
+        </div>
+        <div *ngIf="isAuthenticated()">
             <div class="container">
                 <jhi-program-view [programs]="programs"></jhi-program-view>
             </div>

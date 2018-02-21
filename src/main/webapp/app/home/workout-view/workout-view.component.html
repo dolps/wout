@@ -1,3 +1,11 @@
-<p>
-  workout-view works!
-</p>
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-outline-secondary" *ngFor="let workout of workouts"
+                    [class.selected]="workout === selectedWorkout"
+                    (click)="onSelectWorkout(workout)">
+                {{workout.name}}
+            </button>
+        </div>
+    </div>
+</div>
