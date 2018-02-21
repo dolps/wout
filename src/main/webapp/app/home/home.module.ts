@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { WoutSharedModule } from '../shared';
 
 import { HOME_ROUTE, HomeComponent } from './';
+import { ProgramViewComponent } from './program-view/program-view.component';
+import { WorkoutViewComponent } from './workout-view/workout-view.component';
 
 @NgModule({
     imports: [
@@ -12,6 +14,8 @@ import { HOME_ROUTE, HomeComponent } from './';
     ],
     declarations: [
         HomeComponent,
+        ProgramViewComponent,
+        WorkoutViewComponent,
     ],
     entryComponents: [
     ],

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
-
-import { Account, LoginModalService, Principal } from '../shared';
+import {Component, OnInit} from '@angular/core';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
+import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {Account, LoginModalService, Principal} from '../shared';
+import {Program, ProgramService} from '../entities/program';
 
 @Component({
     selector: 'jhi-home',
@@ -15,12 +16,13 @@ import { Account, LoginModalService, Principal } from '../shared';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    programs: Program[];
 
-    constructor(
-        private principal: Principal,
-        private loginModalService: LoginModalService,
-        private eventManager: JhiEventManager
-    ) {
+    constructor(private principal: Principal,
+                private loginModalService: LoginModalService,
+                private eventManager: JhiEventManager,
+                private jhiAlertService: JhiAlertService,
+                private programService: ProgramService) {
     }
 
     ngOnInit() {
@@ -28,6 +30,7 @@ export class HomeComponent implements OnInit {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
+        this.loadAllPrograms();
     }
 
     registerAuthenticationSuccess() {
@@ -44,5 +47,18 @@ export class HomeComponent implements OnInit {
 
     login() {
         this.modalRef = this.loginModalService.open();
+    }
+
+    loadAllPrograms() {
+        this.programService.query().subscribe(
+            (res: HttpResponse<Program[]>) => {
+                this.programs = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+    }
+
+    private onError(error) {
+        this.jhiAlertService.error(error.message, null, null);
     }
 }

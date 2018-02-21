@@ -1,0 +1,15 @@
+<div *ngIf="programs">
+    <div class="row">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-secondary" *ngFor="let program of programs"
+                    [class.selected]="program === selectedProgram"
+                    (click)="onSelectProgram(program)">
+                {{program.name}}
+            </button>
+            <button type="button" class="btn btn-outline-secondary"
+                    (click)="onCreateProgram(program)">
+                create Program
+            </button>
+        </div>
+    </div>
+</div>
