@@ -1,0 +1,26 @@
+entity Program{
+	name String
+}
+entity WorkOut{
+	name String
+}
+entity Exercise {
+	name String
+}
+entity Sett {
+	order Integer,
+    reps Integer,
+    weight Integer
+}
+relationship OneToMany {
+	Exercise{sett} to Sett
+}
+relationship ManyToOne {
+	WorkOut{program} to Program,
+	Exercise{workOut} to WorkOut,
+    Program{user(login)} to User
+}
+
+dto * with mapstruct
+
+service all with serviceImpl
