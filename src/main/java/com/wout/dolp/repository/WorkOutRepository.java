@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.*;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface WorkOutRepository extends JpaRepository<WorkOut, Long> {
+public interface WorkOutRepository extends JpaRepository<WorkOut, Long>, JpaSpecificationExecutor<WorkOut> {
 
 }

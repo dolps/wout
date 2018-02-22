@@ -3,11 +3,14 @@ package com.wout.dolp.web.rest;
 import com.wout.dolp.WoutApp;
 
 import com.wout.dolp.domain.WorkOut;
+import com.wout.dolp.domain.Program;
 import com.wout.dolp.repository.WorkOutRepository;
 import com.wout.dolp.service.WorkOutService;
 import com.wout.dolp.service.dto.WorkOutDTO;
 import com.wout.dolp.service.mapper.WorkOutMapper;
 import com.wout.dolp.web.rest.errors.ExceptionTranslator;
+import com.wout.dolp.service.dto.WorkOutCriteria;
+import com.wout.dolp.service.WorkOutQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +57,9 @@ public class WorkOutResourceIntTest {
     private WorkOutService workOutService;
 
     @Autowired
+    private WorkOutQueryService workOutQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -72,7 +78,7 @@ public class WorkOutResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final WorkOutResource workOutResource = new WorkOutResource(workOutService);
+        final WorkOutResource workOutResource = new WorkOutResource(workOutService, workOutQueryService);
         this.restWorkOutMockMvc = MockMvcBuilders.standaloneSetup(workOutResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -163,6 +169,86 @@ public class WorkOutResourceIntTest {
             .andExpect(jsonPath("$.id").value(workOut.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
+
+    @Test
+    @Transactional
+    public void getAllWorkOutsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        workOutRepository.saveAndFlush(workOut);
+
+        // Get all the workOutList where name equals to DEFAULT_NAME
+        defaultWorkOutShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the workOutList where name equals to UPDATED_NAME
+        defaultWorkOutShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWorkOutsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        workOutRepository.saveAndFlush(workOut);
+
+        // Get all the workOutList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultWorkOutShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the workOutList where name equals to UPDATED_NAME
+        defaultWorkOutShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWorkOutsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        workOutRepository.saveAndFlush(workOut);
+
+        // Get all the workOutList where name is not null
+        defaultWorkOutShouldBeFound("name.specified=true");
+
+        // Get all the workOutList where name is null
+        defaultWorkOutShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllWorkOutsByProgramIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Program program = ProgramResourceIntTest.createEntity(em);
+        em.persist(program);
+        em.flush();
+        workOut.setProgram(program);
+        workOutRepository.saveAndFlush(workOut);
+        Long programId = program.getId();
+
+        // Get all the workOutList where program equals to programId
+        defaultWorkOutShouldBeFound("programId.equals=" + programId);
+
+        // Get all the workOutList where program equals to programId + 1
+        defaultWorkOutShouldNotBeFound("programId.equals=" + (programId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultWorkOutShouldBeFound(String filter) throws Exception {
+        restWorkOutMockMvc.perform(get("/api/work-outs?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(workOut.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultWorkOutShouldNotBeFound(String filter) throws Exception {
+        restWorkOutMockMvc.perform(get("/api/work-outs?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+    }
+
 
     @Test
     @Transactional
