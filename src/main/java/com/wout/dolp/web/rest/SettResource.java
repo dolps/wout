@@ -5,6 +5,8 @@ import com.wout.dolp.service.SettService;
 import com.wout.dolp.web.rest.errors.BadRequestAlertException;
 import com.wout.dolp.web.rest.util.HeaderUtil;
 import com.wout.dolp.service.dto.SettDTO;
+import com.wout.dolp.service.dto.SettCriteria;
+import com.wout.dolp.service.SettQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +32,11 @@ public class SettResource {
 
     private final SettService settService;
 
-    public SettResource(SettService settService) {
+    private final SettQueryService settQueryService;
+
+    public SettResource(SettService settService, SettQueryService settQueryService) {
         this.settService = settService;
+        this.settQueryService = settQueryService;
     }
 
     /**
@@ -79,14 +84,16 @@ public class SettResource {
     /**
      * GET  /setts : get all the setts.
      *
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of setts in body
      */
     @GetMapping("/setts")
     @Timed
-    public List<SettDTO> getAllSetts() {
-        log.debug("REST request to get all Setts");
-        return settService.findAll();
-        }
+    public ResponseEntity<List<SettDTO>> getAllSetts(SettCriteria criteria) {
+        log.debug("REST request to get Setts by criteria: {}", criteria);
+        List<SettDTO> entityList = settQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
 
     /**
      * GET  /setts/:id : get the "id" sett.

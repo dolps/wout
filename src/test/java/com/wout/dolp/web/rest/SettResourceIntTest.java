@@ -3,11 +3,14 @@ package com.wout.dolp.web.rest;
 import com.wout.dolp.WoutApp;
 
 import com.wout.dolp.domain.Sett;
+import com.wout.dolp.domain.Exercise;
 import com.wout.dolp.repository.SettRepository;
 import com.wout.dolp.service.SettService;
 import com.wout.dolp.service.dto.SettDTO;
 import com.wout.dolp.service.mapper.SettMapper;
 import com.wout.dolp.web.rest.errors.ExceptionTranslator;
+import com.wout.dolp.service.dto.SettCriteria;
+import com.wout.dolp.service.SettQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +63,9 @@ public class SettResourceIntTest {
     private SettService settService;
 
     @Autowired
+    private SettQueryService settQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -78,7 +84,7 @@ public class SettResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SettResource settResource = new SettResource(settService);
+        final SettResource settResource = new SettResource(settService, settQueryService);
         this.restSettMockMvc = MockMvcBuilders.standaloneSetup(settResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -177,6 +183,247 @@ public class SettResourceIntTest {
             .andExpect(jsonPath("$.reps").value(DEFAULT_REPS))
             .andExpect(jsonPath("$.weight").value(DEFAULT_WEIGHT));
     }
+
+    @Test
+    @Transactional
+    public void getAllSettsByOrderIsEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where order equals to DEFAULT_ORDER
+        defaultSettShouldBeFound("order.equals=" + DEFAULT_ORDER);
+
+        // Get all the settList where order equals to UPDATED_ORDER
+        defaultSettShouldNotBeFound("order.equals=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByOrderIsInShouldWork() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where order in DEFAULT_ORDER or UPDATED_ORDER
+        defaultSettShouldBeFound("order.in=" + DEFAULT_ORDER + "," + UPDATED_ORDER);
+
+        // Get all the settList where order equals to UPDATED_ORDER
+        defaultSettShouldNotBeFound("order.in=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByOrderIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where order is not null
+        defaultSettShouldBeFound("order.specified=true");
+
+        // Get all the settList where order is null
+        defaultSettShouldNotBeFound("order.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByOrderIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where order greater than or equals to DEFAULT_ORDER
+        defaultSettShouldBeFound("order.greaterOrEqualThan=" + DEFAULT_ORDER);
+
+        // Get all the settList where order greater than or equals to UPDATED_ORDER
+        defaultSettShouldNotBeFound("order.greaterOrEqualThan=" + UPDATED_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByOrderIsLessThanSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where order less than or equals to DEFAULT_ORDER
+        defaultSettShouldNotBeFound("order.lessThan=" + DEFAULT_ORDER);
+
+        // Get all the settList where order less than or equals to UPDATED_ORDER
+        defaultSettShouldBeFound("order.lessThan=" + UPDATED_ORDER);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllSettsByRepsIsEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where reps equals to DEFAULT_REPS
+        defaultSettShouldBeFound("reps.equals=" + DEFAULT_REPS);
+
+        // Get all the settList where reps equals to UPDATED_REPS
+        defaultSettShouldNotBeFound("reps.equals=" + UPDATED_REPS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByRepsIsInShouldWork() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where reps in DEFAULT_REPS or UPDATED_REPS
+        defaultSettShouldBeFound("reps.in=" + DEFAULT_REPS + "," + UPDATED_REPS);
+
+        // Get all the settList where reps equals to UPDATED_REPS
+        defaultSettShouldNotBeFound("reps.in=" + UPDATED_REPS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByRepsIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where reps is not null
+        defaultSettShouldBeFound("reps.specified=true");
+
+        // Get all the settList where reps is null
+        defaultSettShouldNotBeFound("reps.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByRepsIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where reps greater than or equals to DEFAULT_REPS
+        defaultSettShouldBeFound("reps.greaterOrEqualThan=" + DEFAULT_REPS);
+
+        // Get all the settList where reps greater than or equals to UPDATED_REPS
+        defaultSettShouldNotBeFound("reps.greaterOrEqualThan=" + UPDATED_REPS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByRepsIsLessThanSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where reps less than or equals to DEFAULT_REPS
+        defaultSettShouldNotBeFound("reps.lessThan=" + DEFAULT_REPS);
+
+        // Get all the settList where reps less than or equals to UPDATED_REPS
+        defaultSettShouldBeFound("reps.lessThan=" + UPDATED_REPS);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllSettsByWeightIsEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where weight equals to DEFAULT_WEIGHT
+        defaultSettShouldBeFound("weight.equals=" + DEFAULT_WEIGHT);
+
+        // Get all the settList where weight equals to UPDATED_WEIGHT
+        defaultSettShouldNotBeFound("weight.equals=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByWeightIsInShouldWork() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where weight in DEFAULT_WEIGHT or UPDATED_WEIGHT
+        defaultSettShouldBeFound("weight.in=" + DEFAULT_WEIGHT + "," + UPDATED_WEIGHT);
+
+        // Get all the settList where weight equals to UPDATED_WEIGHT
+        defaultSettShouldNotBeFound("weight.in=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByWeightIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where weight is not null
+        defaultSettShouldBeFound("weight.specified=true");
+
+        // Get all the settList where weight is null
+        defaultSettShouldNotBeFound("weight.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByWeightIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where weight greater than or equals to DEFAULT_WEIGHT
+        defaultSettShouldBeFound("weight.greaterOrEqualThan=" + DEFAULT_WEIGHT);
+
+        // Get all the settList where weight greater than or equals to UPDATED_WEIGHT
+        defaultSettShouldNotBeFound("weight.greaterOrEqualThan=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSettsByWeightIsLessThanSomething() throws Exception {
+        // Initialize the database
+        settRepository.saveAndFlush(sett);
+
+        // Get all the settList where weight less than or equals to DEFAULT_WEIGHT
+        defaultSettShouldNotBeFound("weight.lessThan=" + DEFAULT_WEIGHT);
+
+        // Get all the settList where weight less than or equals to UPDATED_WEIGHT
+        defaultSettShouldBeFound("weight.lessThan=" + UPDATED_WEIGHT);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllSettsByExerciseIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Exercise exercise = ExerciseResourceIntTest.createEntity(em);
+        em.persist(exercise);
+        em.flush();
+        sett.setExercise(exercise);
+        settRepository.saveAndFlush(sett);
+        Long exerciseId = exercise.getId();
+
+        // Get all the settList where exercise equals to exerciseId
+        defaultSettShouldBeFound("exerciseId.equals=" + exerciseId);
+
+        // Get all the settList where exercise equals to exerciseId + 1
+        defaultSettShouldNotBeFound("exerciseId.equals=" + (exerciseId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultSettShouldBeFound(String filter) throws Exception {
+        restSettMockMvc.perform(get("/api/setts?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(sett.getId().intValue())))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
+            .andExpect(jsonPath("$.[*].reps").value(hasItem(DEFAULT_REPS)))
+            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT)));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultSettShouldNotBeFound(String filter) throws Exception {
+        restSettMockMvc.perform(get("/api/setts?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+    }
+
 
     @Test
     @Transactional
