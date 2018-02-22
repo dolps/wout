@@ -1,15 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Exercise} from '../../entities/exercise';
+import {HttpResponse} from '@angular/common/http';
+import {Sett, SettService} from '../../entities/sett';
 
 @Component({
-  selector: 'jhi-sett-view',
-  templateUrl: './sett-view.component.html',
-  styles: []
+    selector: 'jhi-sett-view',
+    templateUrl: './sett-view.component.html',
+    styles: []
 })
-export class SettViewComponent implements OnInit {
+export class SettViewComponent implements OnInit, OnChanges {
+    @Input() exercise: Exercise;
+    setts: Sett[];
+    selectedSett: Sett;
 
-  constructor() { }
+    constructor(private settService: SettService) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(JSON.stringify(changes));
+        this.getAllSetts();
+    }
+
+    onSelect(sett) {
+        this.selectedSett = sett;
+    }
+
+    onCreate() {
+        console.log('creating new exercise');
+    }
+
+    getAllSetts() {
+        this.settService.query({'exerciseId.in': this.exercise.id}).subscribe((res: HttpResponse<Exercise[]>) => {
+            this.setts = res.body;
+        });
+    }
 
 }
