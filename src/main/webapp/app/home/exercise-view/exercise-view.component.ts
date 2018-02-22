@@ -23,6 +23,7 @@ export class ExerciseViewComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         console.log(JSON.stringify(changes));
+        this.selectedExercise = null;
         this.getAllExercises();
     }
 
