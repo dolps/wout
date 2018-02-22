@@ -6,6 +6,7 @@ import { WoutSharedModule } from '../shared';
 import { HOME_ROUTE, HomeComponent } from './';
 import { ProgramViewComponent } from './program-view/program-view.component';
 import { WorkoutViewComponent } from './workout-view/workout-view.component';
+import { ExerciseViewComponent } from './exercise-view/exercise-view.component';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { WorkoutViewComponent } from './workout-view/workout-view.component';
         HomeComponent,
         ProgramViewComponent,
         WorkoutViewComponent,
+        ExerciseViewComponent,
     ],
     entryComponents: [
     ],

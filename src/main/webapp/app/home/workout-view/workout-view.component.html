@@ -6,6 +6,13 @@
                     (click)="onSelectWorkout(workout)">
                 {{workout.name}}
             </button>
+            <button type="button" class="btn btn-outline-secondary"
+                    (click)="onCreate()">
+                create WorkOut
+            </button>
         </div>
     </div>
+</div>
+<div *ngIf="selectedWorkout">
+    <jhi-exercise-view [workOut]="selectedWorkout"></jhi-exercise-view>
 </div>

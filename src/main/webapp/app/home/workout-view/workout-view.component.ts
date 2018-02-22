@@ -16,7 +16,6 @@ export class WorkoutViewComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        console.log('programID: ' + this.program.id);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -35,4 +34,7 @@ export class WorkoutViewComponent implements OnInit, OnChanges {
         });
     }
 
+    onCreate() {
+        console.log('Creating new Workout');
+    }
 }
