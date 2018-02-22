@@ -6,10 +6,7 @@
                     (click)="onSelectProgram(program)">
                 {{program.name}}
             </button>
-            <button type="button" class="btn btn-outline-secondary"
-                    (click)="onCreateProgram(program)">
-                add new
-            </button>
+            <jhi-create-entity-button [buttonText]="btnCreateTxt" [entity_new]="btnCreateEntity"></jhi-create-entity-button>
         </div>
     </div>
 </div>

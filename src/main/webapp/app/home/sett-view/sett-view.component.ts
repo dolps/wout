@@ -12,6 +12,8 @@ export class SettViewComponent implements OnInit, OnChanges {
     @Input() exercise: Exercise;
     setts: Sett[];
     selectedSett: Sett;
+    btnCreateEntity = 'sett-new';
+    btnCreateTxt = 'create set';
 
     constructor(private settService: SettService) {
     }

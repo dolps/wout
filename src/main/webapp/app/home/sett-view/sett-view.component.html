@@ -6,10 +6,7 @@
                     (click)="onSelect(sett)">
                 {{sett.reps}} | @ {{sett.weight}}kg
             </button>
-            <button type="button" class="btn btn-outline-secondary"
-                    (click)="onCreate()">
-                add new
-            </button>
+            <jhi-create-entity-button [buttonText]="btnCreateTxt" [entity_new]="btnCreateEntity"></jhi-create-entity-button>
         </div>
     </div>
 </div>

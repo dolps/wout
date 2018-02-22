@@ -12,6 +12,8 @@ export class ExerciseViewComponent implements OnInit, OnChanges {
     @Input() workOut: WorkOut;
     exercises: Exercise[];
     selectedExercise: Exercise;
+    btnCreateEntity = 'exercise-new';
+    btnCreateTxt = 'create exercise';
 
     constructor(private exerciseService: ExerciseService) {
     }

@@ -9,6 +9,8 @@ import {Program} from '../../entities/program';
 export class ProgramViewComponent implements OnInit {
     @Input() programs: Program[];
     selectedProgram: Program;
+    btnCreateEntity = 'program-new';
+    btnCreateTxt = 'create program';
 
     constructor() {
     }
@@ -19,9 +21,4 @@ export class ProgramViewComponent implements OnInit {
     onSelectProgram(program: Program) {
         this.selectedProgram = program;
     }
-
-    onCreateProgram() {
-        console.log('creating new program');
-    }
-
 }

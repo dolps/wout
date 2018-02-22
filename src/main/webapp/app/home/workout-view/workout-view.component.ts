@@ -11,6 +11,8 @@ export class WorkoutViewComponent implements OnInit, OnChanges {
     @Input() program: Program;
     workouts: WorkOut[];
     selectedWorkout: WorkOut;
+    btnCreateEntity = 'work-out-new';
+    btnCreateTxt = 'create workout';
 
     constructor(private workOutService: WorkOutService) {
     }
@@ -20,8 +22,8 @@ export class WorkoutViewComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         console.log(JSON.stringify(changes));
+        this.selectedWorkout = null;
         this.getAllWorkOuts();
-        // changes.prop contains the old and the new value...
     }
 
     onSelectWorkout(workOut: WorkOut) {
