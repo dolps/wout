@@ -13,4 +13,6 @@
         </div>
     </div>
 </div>
-<jhi-workout-view [program]="selectedProgram"></jhi-workout-view>
+<div *ngIf="selectedProgram">
+    <jhi-workout-view [program]="selectedProgram"></jhi-workout-view>
+</div>

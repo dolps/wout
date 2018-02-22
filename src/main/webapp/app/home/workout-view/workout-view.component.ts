@@ -13,12 +13,12 @@ export class WorkoutViewComponent implements OnInit {
     selectedWorkout: WorkOut;
 
     constructor(private workOutService: WorkOutService) {
-        this.workOutService.query().subscribe((res) => {
-            this.workouts = res.body;
-        });
     }
 
     ngOnInit() {
+        this.workOutService.query({'program': this.program.id}).subscribe((res) => {
+            this.workouts = res.body;
+        });
     }
 
     onSelectWorkout(workOut: WorkOut) {

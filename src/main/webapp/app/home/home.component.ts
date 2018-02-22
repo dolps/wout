@@ -28,16 +28,21 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.principal.identity().then((account) => {
             this.account = account;
+            if (this.isAuthenticated()) {
+                this.loadAllPrograms();
+            }
         });
         this.registerAuthenticationSuccess();
-
-        this.loadAllPrograms();
     }
 
     registerAuthenticationSuccess() {
         this.eventManager.subscribe('authenticationSuccess', (message) => {
             this.principal.identity().then((account) => {
                 this.account = account;
+
+                if (this.isAuthenticated()) {
+                    this.loadAllPrograms();
+                }
             });
         });
     }
