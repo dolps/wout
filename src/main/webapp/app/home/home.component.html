@@ -4,16 +4,18 @@
     </div>
 
     <div class="col-md-9">
-        <h1 class="display-4">Welcome, Java Hipster!</h1>
-        <p class="lead">This is your homepage</p>
-
+        <div class="row">
+            <div class="col-md-8"><h1 class="display-4">Treningsplan</h1></div>
+            <div class="col-md-4" *ngIf="isAuthenticated()">
+                <div class="alert alert-success">
+                    <span *ngIf="account"> Logged in as "{{account.login}}". </span>
+                </div>
+            </div>
+        </div>
 
         <div *ngIf="isAuthenticated()">
             <div class="container">
-                <div class="alert alert-success">
-                    <span *ngIf="account"> You are logged in as user "{{account.login}}". </span>
-                </div>
-                <div *ngIf="programs">
+                <div class="row mt-3" *ngIf="programs">
                     <jhi-program-view [programs]="programs"></jhi-program-view>
                 </div>
             </div>
