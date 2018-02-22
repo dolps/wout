@@ -28,6 +28,10 @@ export class ExerciseViewComponent implements OnInit, OnChanges {
         this.selectedExercise = exercise;
     }
 
+    onCreate() {
+        console.log('creating new exercise');
+    }
+
     getAllExercises() {
         this.exerciseService.query({'workOutId.in': this.workOut.id}).subscribe((res: HttpResponse<Exercise[]>) => {
             this.exercises = res.body;

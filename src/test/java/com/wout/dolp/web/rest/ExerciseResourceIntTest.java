@@ -3,11 +3,15 @@ package com.wout.dolp.web.rest;
 import com.wout.dolp.WoutApp;
 
 import com.wout.dolp.domain.Exercise;
+import com.wout.dolp.domain.Sett;
+import com.wout.dolp.domain.WorkOut;
 import com.wout.dolp.repository.ExerciseRepository;
 import com.wout.dolp.service.ExerciseService;
 import com.wout.dolp.service.dto.ExerciseDTO;
 import com.wout.dolp.service.mapper.ExerciseMapper;
 import com.wout.dolp.web.rest.errors.ExceptionTranslator;
+import com.wout.dolp.service.dto.ExerciseCriteria;
+import com.wout.dolp.service.ExerciseQueryService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +58,9 @@ public class ExerciseResourceIntTest {
     private ExerciseService exerciseService;
 
     @Autowired
+    private ExerciseQueryService exerciseQueryService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -72,7 +79,7 @@ public class ExerciseResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ExerciseResource exerciseResource = new ExerciseResource(exerciseService);
+        final ExerciseResource exerciseResource = new ExerciseResource(exerciseService, exerciseQueryService);
         this.restExerciseMockMvc = MockMvcBuilders.standaloneSetup(exerciseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -163,6 +170,105 @@ public class ExerciseResourceIntTest {
             .andExpect(jsonPath("$.id").value(exercise.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
+
+    @Test
+    @Transactional
+    public void getAllExercisesByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        exerciseRepository.saveAndFlush(exercise);
+
+        // Get all the exerciseList where name equals to DEFAULT_NAME
+        defaultExerciseShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the exerciseList where name equals to UPDATED_NAME
+        defaultExerciseShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllExercisesByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        exerciseRepository.saveAndFlush(exercise);
+
+        // Get all the exerciseList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultExerciseShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the exerciseList where name equals to UPDATED_NAME
+        defaultExerciseShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllExercisesByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        exerciseRepository.saveAndFlush(exercise);
+
+        // Get all the exerciseList where name is not null
+        defaultExerciseShouldBeFound("name.specified=true");
+
+        // Get all the exerciseList where name is null
+        defaultExerciseShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllExercisesBySettIsEqualToSomething() throws Exception {
+        // Initialize the database
+        Sett sett = SettResourceIntTest.createEntity(em);
+        em.persist(sett);
+        em.flush();
+        exercise.addSett(sett);
+        exerciseRepository.saveAndFlush(exercise);
+        Long settId = sett.getId();
+
+        // Get all the exerciseList where sett equals to settId
+        defaultExerciseShouldBeFound("settId.equals=" + settId);
+
+        // Get all the exerciseList where sett equals to settId + 1
+        defaultExerciseShouldNotBeFound("settId.equals=" + (settId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllExercisesByWorkOutIsEqualToSomething() throws Exception {
+        // Initialize the database
+        WorkOut workOut = WorkOutResourceIntTest.createEntity(em);
+        em.persist(workOut);
+        em.flush();
+        exercise.setWorkOut(workOut);
+        exerciseRepository.saveAndFlush(exercise);
+        Long workOutId = workOut.getId();
+
+        // Get all the exerciseList where workOut equals to workOutId
+        defaultExerciseShouldBeFound("workOutId.equals=" + workOutId);
+
+        // Get all the exerciseList where workOut equals to workOutId + 1
+        defaultExerciseShouldNotBeFound("workOutId.equals=" + (workOutId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned
+     */
+    private void defaultExerciseShouldBeFound(String filter) throws Exception {
+        restExerciseMockMvc.perform(get("/api/exercises?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(exercise.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned
+     */
+    private void defaultExerciseShouldNotBeFound(String filter) throws Exception {
+        restExerciseMockMvc.perform(get("/api/exercises?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+    }
+
 
     @Test
     @Transactional

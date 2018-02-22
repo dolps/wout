@@ -5,6 +5,8 @@ import com.wout.dolp.service.ExerciseService;
 import com.wout.dolp.web.rest.errors.BadRequestAlertException;
 import com.wout.dolp.web.rest.util.HeaderUtil;
 import com.wout.dolp.service.dto.ExerciseDTO;
+import com.wout.dolp.service.dto.ExerciseCriteria;
+import com.wout.dolp.service.ExerciseQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +32,11 @@ public class ExerciseResource {
 
     private final ExerciseService exerciseService;
 
-    public ExerciseResource(ExerciseService exerciseService) {
+    private final ExerciseQueryService exerciseQueryService;
+
+    public ExerciseResource(ExerciseService exerciseService, ExerciseQueryService exerciseQueryService) {
         this.exerciseService = exerciseService;
+        this.exerciseQueryService = exerciseQueryService;
     }
 
     /**
@@ -79,14 +84,16 @@ public class ExerciseResource {
     /**
      * GET  /exercises : get all the exercises.
      *
+     * @param criteria the criterias which the requested entities should match
      * @return the ResponseEntity with status 200 (OK) and the list of exercises in body
      */
     @GetMapping("/exercises")
     @Timed
-    public List<ExerciseDTO> getAllExercises() {
-        log.debug("REST request to get all Exercises");
-        return exerciseService.findAll();
-        }
+    public ResponseEntity<List<ExerciseDTO>> getAllExercises(ExerciseCriteria criteria) {
+        log.debug("REST request to get Exercises by criteria: {}", criteria);
+        List<ExerciseDTO> entityList = exerciseQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
 
     /**
      * GET  /exercises/:id : get the "id" exercise.

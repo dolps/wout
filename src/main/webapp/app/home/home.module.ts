@@ -7,6 +7,7 @@ import { HOME_ROUTE, HomeComponent } from './';
 import { ProgramViewComponent } from './program-view/program-view.component';
 import { WorkoutViewComponent } from './workout-view/workout-view.component';
 import { ExerciseViewComponent } from './exercise-view/exercise-view.component';
+import { SettViewComponent } from './sett-view/sett-view.component';
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import { ExerciseViewComponent } from './exercise-view/exercise-view.component';
         ProgramViewComponent,
         WorkoutViewComponent,
         ExerciseViewComponent,
+        SettViewComponent,
     ],
     entryComponents: [
     ],
