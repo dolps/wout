@@ -4,11 +4,11 @@ services:
         image: wout
         environment:
             - SPRING_PROFILES_ACTIVE=prod,swagger
-            - SPRING_DATASOURCE_URL=jdbc:mysql://wout-mysql:3306/wout?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://wout-postgresql:5432/wout
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
         ports:
             - 8080:8080
-    wout-mysql:
+    wout-postgresql:
         extends:
-            file: mysql.yml
-            service: wout-mysql
+            file: postgresql.yml
+            service: wout-postgresql
