@@ -1,5 +1,5 @@
-<div *ngIf="programs">
-    <div class="row">
+<div class="row mt-3">
+    <div class="col-md-12">
         <div class="btn-group">
             <button type="button" class="btn btn-outline-secondary" *ngFor="let program of programs"
                     [class.selected]="program === selectedProgram"
@@ -13,3 +13,4 @@
         </div>
     </div>
 </div>
+<jhi-workout-view [program]="selectedProgram"></jhi-workout-view>

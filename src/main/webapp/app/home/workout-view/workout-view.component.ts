@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {WorkOut} from '../../entities/work-out';
+import {Component, Input, OnInit} from '@angular/core';
+import {WorkOut, WorkOutService} from '../../entities/work-out';
+import {Program} from '../../entities/program';
 
 @Component({
     selector: 'jhi-workout-view',
@@ -7,12 +8,21 @@ import {WorkOut} from '../../entities/work-out';
     styles: []
 })
 export class WorkoutViewComponent implements OnInit {
-    // @Input() workOuts: WorkOut[];
+    @Input() program: Program;
+    workouts: WorkOut[];
+    selectedWorkout: WorkOut;
 
-    constructor() {
+    constructor(private workOutService: WorkOutService) {
+        this.workOutService.query().subscribe((res) => {
+            this.workouts = res.body;
+        });
     }
 
     ngOnInit() {
+    }
+
+    onSelectWorkout(workOut: WorkOut) {
+        this.selectedWorkout = workOut;
     }
 
 }

@@ -7,14 +7,15 @@
         <h1 class="display-4">Welcome, Java Hipster!</h1>
         <p class="lead">This is your homepage</p>
 
-        <div [ngSwitch]="isAuthenticated()">
-            <div class="alert alert-success" *ngSwitchCase="true">
-                <span *ngIf="account"> You are logged in as user "{{account.login}}". </span>
-            </div>
-        </div>
+
         <div *ngIf="isAuthenticated()">
             <div class="container">
-                <jhi-program-view [programs]="programs"></jhi-program-view>
+                <div class="alert alert-success">
+                    <span *ngIf="account"> You are logged in as user "{{account.login}}". </span>
+                </div>
+                <div *ngIf="programs">
+                    <jhi-program-view [programs]="programs"></jhi-program-view>
+                </div>
             </div>
         </div>
     </div>
