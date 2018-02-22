@@ -1,0 +1,29 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "sett",
+            "otherEntityName": "sett",
+            "otherEntityRelationshipName": "exercise"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "workOut",
+            "otherEntityName": "workOut",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180221195358",
+    "entityTableName": "exercise",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true
+}

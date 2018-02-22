@@ -1,0 +1,41 @@
+package com.wout.dolp.service;
+
+import com.wout.dolp.service.dto.ProgramDTO;
+
+import java.util.List;
+
+/**
+ * Service Interface for managing Program.
+ */
+public interface ProgramService {
+
+    /**
+     * Save a program.
+     *
+     * @param programDTO the entity to save
+     * @return the persisted entity
+     */
+    ProgramDTO save(ProgramDTO programDTO);
+
+    /**
+     * Get all the programs.
+     *
+     * @return the list of entities
+     */
+    List<ProgramDTO> findAll();
+
+    /**
+     * Get the "id" program.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    ProgramDTO findOne(Long id);
+
+    /**
+     * Delete the "id" program.
+     *
+     * @param id the id of the entity
+     */
+    void delete(Long id);
+}
