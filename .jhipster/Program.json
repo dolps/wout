@@ -6,6 +6,12 @@
             "relationshipName": "user",
             "otherEntityName": "user",
             "otherEntityField": "login"
+        },
+        {
+            "relationshipName": "workOut",
+            "otherEntityName": "workOut",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "program"
         }
     ],
     "fields": [
@@ -15,9 +21,9 @@
         }
     ],
     "changelogDate": "20180221195356",
-    "entityTableName": "program",
     "dto": "mapstruct",
-    "pagination": "no",
     "service": "serviceImpl",
-    "jpaMetamodelFiltering": false
+    "entityTableName": "program",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
 }

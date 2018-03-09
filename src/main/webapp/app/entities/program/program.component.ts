@@ -1,25 +1,27 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {HttpResponse, HttpErrorResponse} from '@angular/common/http';
-import {Subscription} from 'rxjs/Subscription';
-import {JhiEventManager, JhiAlertService} from 'ng-jhipster';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
+import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
 
-import {Program} from './program.model';
-import {ProgramService} from './program.service';
-import {Principal} from '../../shared';
+import { Program } from './program.model';
+import { ProgramService } from './program.service';
+import { Principal } from '../../shared';
 
 @Component({
     selector: 'jhi-program',
     templateUrl: './program.component.html'
 })
 export class ProgramComponent implements OnInit, OnDestroy {
-    programs: Program[];
+programs: Program[];
     currentAccount: any;
     eventSubscriber: Subscription;
 
-    constructor(private programService: ProgramService,
-                private jhiAlertService: JhiAlertService,
-                private eventManager: JhiEventManager,
-                private principal: Principal) {
+    constructor(
+        private programService: ProgramService,
+        private jhiAlertService: JhiAlertService,
+        private eventManager: JhiEventManager,
+        private principal: Principal
+    ) {
     }
 
     loadAll() {
@@ -30,7 +32,6 @@ export class ProgramComponent implements OnInit, OnDestroy {
             (res: HttpErrorResponse) => this.onError(res.message)
         );
     }
-
     ngOnInit() {
         this.loadAll();
         this.principal.identity().then((account) => {
@@ -46,7 +47,6 @@ export class ProgramComponent implements OnInit, OnDestroy {
     trackId(index: number, item: Program) {
         return item.id;
     }
-
     registerChangeInPrograms() {
         this.eventSubscriber = this.eventManager.subscribe('programListModification', (response) => this.loadAll());
     }

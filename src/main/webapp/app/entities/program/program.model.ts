@@ -5,6 +5,7 @@ export class Program implements BaseEntity {
         public id?: number,
         public name?: string,
         public userId?: number,
+        public workOuts?: BaseEntity[],
     ) {
     }
 }

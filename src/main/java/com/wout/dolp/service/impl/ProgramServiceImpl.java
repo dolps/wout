@@ -20,8 +20,11 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProgramServiceImpl implements ProgramService {
+
     private final Logger log = LoggerFactory.getLogger(ProgramServiceImpl.class);
+
     private final ProgramRepository programRepository;
+
     private final ProgramMapper programMapper;
 
     public ProgramServiceImpl(ProgramRepository programRepository, ProgramMapper programMapper) {
@@ -55,16 +58,6 @@ public class ProgramServiceImpl implements ProgramService {
         return programRepository.findAll().stream()
             .map(programMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
-     * TODO finish this
-     *
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<Object> findOneWithChildren() {
-        return null;
     }
 
     /**

@@ -16,6 +16,7 @@ public interface ProgramMapper extends EntityMapper<ProgramDTO, Program> {
     ProgramDTO toDto(Program program);
 
     @Mapping(source = "userId", target = "user")
+    @Mapping(target = "workOuts", ignore = true)
     Program toEntity(ProgramDTO programDTO);
 
     default Program fromId(Long id) {

@@ -23,8 +23,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class ProgramResource {
+
     private final Logger log = LoggerFactory.getLogger(ProgramResource.class);
+
     private static final String ENTITY_NAME = "program";
+
     private final ProgramService programService;
 
     public ProgramResource(ProgramService programService) {
@@ -83,7 +86,7 @@ public class ProgramResource {
     public List<ProgramDTO> getAllPrograms() {
         log.debug("REST request to get all Programs");
         return programService.findAll();
-    }
+        }
 
     /**
      * GET  /programs/:id : get the "id" program.
